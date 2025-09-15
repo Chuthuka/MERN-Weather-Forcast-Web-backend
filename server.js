@@ -28,3 +28,26 @@ app.get('/api/weather/:city', async (req, res) => {
     }
   }
 });
+
+
+// Save search history
+app.post('/api/history', async (req, res) => {
+  try {
+    const { city } = req.body;
+    const search = new SearchHistory({ city });
+    await search.save();
+    res.status(201).json(search);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to save search' });
+  }
+});
+
+// Get search history
+app.get('/api/history', async (req, res) => {
+  try {
+    const history = await SearchHistory.find().sort({ timestamp: -1 }).limit(10);
+    res.json(history);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch history' });
+  }
+});
