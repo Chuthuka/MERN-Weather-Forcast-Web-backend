@@ -51,3 +51,16 @@ app.get('/api/history', async (req, res) => {
     res.status(500).json({ error: 'Failed to fetch history' });
   }
 });
+
+// New 7-Day Forecast API endpoint using coordinates
+app.get('/api/forecast/:lat/:lon', async (req, res) => {
+  try {
+    const { lat, lon } = req.params;
+    const forecastUrl = `https://api.openweathermap.org/data/3.0/onecall?lat=${lat}&lon=${lon}&exclude=current,minutely,hourly,alerts&appid=${API_KEY}&units=metric`;
+    const forecastResponse = await axios.get(forecastUrl);
+    res.json(forecastResponse.data);
+  } catch (error) {
+    console.error('Forecast API call error:', error.message);
+    res.status(500).json({ error: 'Failed to fetch 7-day forecast' });
+  }
+});
