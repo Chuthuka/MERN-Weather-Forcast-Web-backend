@@ -64,3 +64,15 @@ app.get('/api/forecast/:lat/:lon', async (req, res) => {
     res.status(500).json({ error: 'Failed to fetch 7-day forecast' });
   }
 });
+
+// New DELETE endpoint to clear search history
+app.delete('/api/history', async (req, res) => {
+  try {
+    // Delete all documents in the SearchHistory collection
+    await SearchHistory.deleteMany({});
+    res.status(200).json({ message: 'Search history cleared successfully' });
+  } catch (error) {
+    console.error('Failed to clear search history:', error);
+    res.status(500).json({ error: 'Failed to clear search history' });
+  }
+});
